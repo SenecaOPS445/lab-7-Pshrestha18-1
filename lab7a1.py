@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-# Student ID: [seneca_id]
+
+# Author: Pranav Shrestha
+# Student ID: 113964225
+
 from lab7a import *
 t1 = Time(8,0,0)
 t2 = Time(8,55,0)
