@@ -1,28 +1,18 @@
 #!/usr/bin/env python3
-
 # Author: Pranav Shrestha
-# Author ID: 113964225
+# Student ID: 113964225
 
-from lab7a import Time  # Import Time class from lab7a.py
+class Time:
+    """Time object with hour, minute, second."""
+    def __init__(self, hour=12, minute=0, second=0):
+        self.hour = hour
+        self.minute = minute
+        self.second = second
 
-def valid_time(t):
-    """Check the validity of the time object attributes."""
-    if t.hour < 0 or t.minute < 0 or t.second < 0:
-        return False
-    if t.minute >= 60 or t.second >= 60 or t.hour >= 24:
-        return False
-    return True
+    def __str__(self):
+        """Return time as 'HH:MM:SS'."""
+        return f'{self.hour:02d}:{self.minute:02d}:{self.second:02d}'
 
-def format_time(t):
-    """Return time object (t) as a formatted string"""
-    return f'{t.hour:02d}:{t.minute:02d}:{t.second:02d}'
-
-# Test the valid_time function
-if __name__ == "__main__":
-    # Create Time objects for testing
-    time1 = Time(10, 30, 0)
-    time2 = Time(25, 60, 0)  # Invalid time
-    
-    # Check validity of times
-    print("Time 1 valid:", valid_time(time1))
-    print("Time 2 valid:", valid_time(time2))
+    def __repr__(self):
+        """Return time as 'HH.MM.SS'."""
+        return f'{self.hour:02d}.{self.minute:02d}.{self.second:02d}'

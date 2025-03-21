@@ -3,40 +3,84 @@
 # Author: Pranav Shrestha
 # Author ID: 113964225
 
-from lab7a import Time  # Import Time class from lab7a.py
-from lab7c import time_difference, format_time  # Import necessary functions from lab7c.py
+class Time:
+    """Simple object type for time of the day.
+       data attributes: hour, minute, second
+       function attributes: __init__, __str__, __repr__,
+                            time_to_sec, format_time,
+                            change_time, sum_time
+    """
+    def __init__(self, hour=12, minute=0, second=0):
+        """constructor for time object""" 
+        self.hour = hour
+        self.minute = minute
+        self.second = second
 
-def get_time_input():
-    """Prompts the user to input time in HH:MM:SS format and returns a Time object."""
-    time_input = input("Enter time (HH:MM:SS): ")
-    
-    try:
-        # Split the input into hour, minute, and second
-        hour, minute, second = map(int, time_input.split(":"))
-        
-        # Create and return a Time object
-        return Time(hour, minute, second)
-    except ValueError:
-        print("Invalid time format. Please enter time in HH:MM:SS format.")
+    def format_time(self):
+        """Return time object (t) as a formatted string"""
+        return f'{self.hour:02d}:{self.minute:02d}:{self.second:02d}'
+
+    def sum_times(self, t2):
+        """Add two time objects and return the sum."""
+        sum = Time(0, 0, 0)
+        sum.hour = self.hour + t2.hour
+        sum.minute = self.minute + t2.minute
+        sum.second = self.second + t2.second
+
+        # Carry over seconds to minutes
+        if sum.second >= 60:
+            sum.minute += sum.second // 60
+            sum.second = sum.second % 60
+
+        # Carry over minutes to hours
+        if sum.minute >= 60:
+            sum.hour += sum.minute // 60
+            sum.minute = sum.minute % 60
+
+        return sum
+
+    def change_time(self, seconds):
+        """Modify the time object by adding seconds."""
+        self.second += seconds
+
+        # Handle negative seconds
+        while self.second < 0:
+            self.second += 60
+            self.minute -= 1
+
+        while self.minute < 0:
+            self.minute += 60
+            self.hour -= 1
+
+        # Handle overflow
+        while self.second >= 60:
+            self.second -= 60
+            self.minute += 1
+
+        while self.minute >= 60:
+            self.minute -= 60
+            self.hour += 1
+
         return None
 
-# Test the user input functionality
-if __name__ == "__main__":
-    # Get two times from the user
-    print("Enter first time:")
-    time1 = get_time_input()
-    if time1 is None:
-        exit(1)  # Exit if input is invalid
-    
-    print("Enter second time:")
-    time2 = get_time_input()
-    if time2 is None:
-        exit(1)  # Exit if input is invalid
-    
-    # Calculate the time difference
-    time_diff = time_difference(time1, time2)
-    
-    # Print the result
-    print("Time 1:", format_time(time1))
-    print("Time 2:", format_time(time2))
-    print("Time difference:", format_time(time_diff))
+    def time_to_sec(self):
+        """Convert a time object to a single integer representing the number of seconds from mid-night."""
+        minutes = self.hour * 60 + self.minute
+        seconds = minutes * 60 + self.second
+        return seconds
+
+    def valid_time(self):
+        """Check for the validity of the time object attributes:
+           24 > hour > 0, 60 > minute > 0, 60 > second > 0 """
+        if self.hour < 0 or self.minute < 0 or self.second < 0:
+            return False
+        if self.minute >= 60 or self.second >= 60 or self.hour >= 24:
+            return False
+        return True
+
+def sec_to_time(seconds):
+    """Convert a given number of seconds to a time object in hour, minute, second format."""
+    time = Time()
+    minutes, time.second = divmod(seconds, 60)
+    time.hour, time.minute = divmod(minutes, 60)
+    return time

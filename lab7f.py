@@ -1,26 +1,31 @@
 #!/usr/bin/env python3
 
 # Author: Pranav Shrestha
-# Author ID: 113964225
+# Stdent ID: 113964225
 
-from lab7a import Time  # Import Time class from lab7a.py
-from lab7c import time_difference, format_time  # Import necessary functions from lab7c.py
-from lab7e import valid_time  # Import valid_time function from lab7e.py
+class Time:
+    """Time object with hour, minute, second."""
+    def __init__(self, hour=12, minute=0, second=0):
+        self.hour = hour
+        self.minute = minute
+        self.second = second
 
-# Test all the functionalities
-if __name__ == "__main__":
-    # Create Time objects for testing
-    time1 = Time(10, 30, 0)
-    time2 = Time(12, 0, 0)
-    time3 = Time(23, 59, 59)  # Edge case time
-    
-    # Check time difference
-    time_diff = time_difference(time1, time2)
-    
-    # Validate times
-    print("Time 1 valid:", valid_time(time1))
-    print("Time 2 valid:", valid_time(time2))
-    print("Time 3 valid:", valid_time(time3))
-    
-    # Print time difference
-    print("Time difference between Time 1 and Time 2:", format_time(time_diff))
+    def __add__(self, other):
+        """Overload the + operator to add two Time objects."""
+        total_seconds = self.time_to_sec() + other.time_to_sec()
+        return self.sec_to_time(total_seconds)
+
+    def time_to_sec(self):
+        """Convert time to total seconds."""
+        return self.hour * 3600 + self.minute * 60 + self.second
+
+    @staticmethod
+    def sec_to_time(seconds):
+        """Convert total seconds to Time object."""
+        hours, remainder = divmod(seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return Time(hours, minutes, seconds)
+
+    def __str__(self):
+        """Return time as 'HH:MM:SS'."""
+        return f'{self.hour:02d}:{self.minute:02d}:{self.second:02d}'
